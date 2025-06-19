@@ -11,8 +11,21 @@
             --accent-color: #6bff6b;
             --dark-color: #333;
             --light-color: #f5f5f5;
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --card-bg: white;
             --border-radius: 8px;
             --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode {
+            --primary-color: #5d7dff;
+            --secondary-color: #ff7b7b;
+            --accent-color: #7bff7b;
+            --bg-color: #121212;
+            --text-color: #f0f0f0;
+            --card-bg: #1e1e1e;
+            --light-color: #2a2a2a;
         }
         
         * {
@@ -23,17 +36,18 @@
         }
         
         body {
-            background-color: #f9f9f9;
-            color: var(--dark-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             padding: 20px;
+            transition: all 0.3s ease;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
         }
@@ -68,6 +82,12 @@
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             text-align: center;
+        }
+        
+        .location-info {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            opacity: 0.9;
         }
         
         .timer-box {
@@ -120,7 +140,7 @@
         }
         
         .timer-btn:hover {
-            background-color: #f0f0f0;
+            background-color: rgba(255, 255, 255, 0.9);
         }
         
         .routine-section {
@@ -136,10 +156,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: move;
         }
         
         .routine-title h2 {
             font-size: 1.5rem;
+            margin-right: 10px;
         }
         
         .edit-btn {
@@ -150,11 +172,12 @@
         }
         
         .edit-btn:hover {
-            background-color: #f0f0f0;
+            background-color: rgba(255, 255, 255, 0.9);
         }
         
         .task-list {
             list-style: none;
+            min-height: 20px;
         }
         
         .task-item {
@@ -165,6 +188,7 @@
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
+            cursor: move;
         }
         
         .task-item:hover {
@@ -186,28 +210,97 @@
         .completed {
             text-decoration: line-through;
             opacity: 0.7;
-            background-color: #e0ffe0;
+            background-color: rgba(107, 255, 107, 0.2);
         }
         
         .exam-section {
-            background-color: #fff8e1;
+            background-color: var(--light-color);
             padding: 20px;
             border-radius: var(--border-radius);
             margin-top: 30px;
-            border-left: 5px solid #ffc107;
+            border-left: 5px solid var(--primary-color);
         }
         
         .exam-section h3 {
-            color: #ff9800;
+            color: var(--primary-color);
             margin-bottom: 10px;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+        }
+        
+        .dark-mode-btn {
+            background-color: var(--dark-color);
+            color: white;
+        }
+        
+        .export-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .gmt-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .gmt-control select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background-color: var(--card-bg);
+            color: var(--text-color);
         }
         
         footer {
             text-align: center;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #777;
+            border-top: 1px solid var(--light-color);
+            color: var(--text-color);
+            opacity: 0.7;
         }
         
         @media (max-width: 768px) {
@@ -277,11 +370,54 @@
             <p>Stay organized and track your progress</p>
         </header>
         
+        <div class="controls">
+            <button class="control-btn dark-mode-btn" id="dark-mode-toggle">🌙 Dark Mode</button>
+            <button class="control-btn export-btn" id="export-pdf">📄 Export PDF</button>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-text" id="progress-text">0% Completed (0/0 Tasks)</div>
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar" style="width: 0%;"></div>
+            </div>
+        </div>
+        
         <div class="datetime-container">
             <div class="datetime-box">
                 <h3>Current Date & Time</h3>
-                <div class="current-time" id="current-time">00:00:00</div>
+                <div class="current-time" id="current-time">00:00:00 AM</div>
                 <div class="current-date" id="current-date">Day, Month 00, 0000</div>
+                <div class="location-info" id="location-info">Location: Loading...</div>
+                <div class="gmt-control" id="gmt-control" style="display: none;">
+                    <span>Set Timezone:</span>
+                    <select id="gmt-select">
+                        <option value="-12">GMT-12</option>
+                        <option value="-11">GMT-11</option>
+                        <option value="-10">GMT-10</option>
+                        <option value="-9">GMT-9</option>
+                        <option value="-8">GMT-8</option>
+                        <option value="-7">GMT-7</option>
+                        <option value="-6">GMT-6</option>
+                        <option value="-5">GMT-5</option>
+                        <option value="-4">GMT-4</option>
+                        <option value="-3">GMT-3</option>
+                        <option value="-2">GMT-2</option>
+                        <option value="-1">GMT-1</option>
+                        <option value="0">GMT±0</option>
+                        <option value="1">GMT+1</option>
+                        <option value="2">GMT+2</option>
+                        <option value="3">GMT+3</option>
+                        <option value="4">GMT+4</option>
+                        <option value="5">GMT+5</option>
+                        <option value="6" selected>GMT+6 (Bangladesh)</option>
+                        <option value="7">GMT+7</option>
+                        <option value="8">GMT+8</option>
+                        <option value="9">GMT+9</option>
+                        <option value="10">GMT+10</option>
+                        <option value="11">GMT+11</option>
+                        <option value="12">GMT+12</option>
+                    </select>
+                </div>
             </div>
             
             <div class="timer-box">
@@ -296,24 +432,24 @@
         </div>
         
         <div class="routine-section">
-            <div class="routine-title">
-                <h2>🔥🔥সকাল ১০টা পর্যন্ত : No Screen</h2>
+            <div class="routine-title" draggable="true">
+                <h2 contenteditable="true">🔥🔥সকাল ১০টা পর্যন্ত : No Screen</h2>
                 <button class="edit-btn" onclick="toggleEditMode('morning')">Edit</button>
             </div>
             <ul class="task-list" id="morning-tasks">
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">নামাজ: ফজর</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">Biology (Self Study)</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">1. Read Book and try মুখস্ত</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">2. QB Solve (অ্যাসপেক্ট) and try মুখস্ত</span>
                 </li>
@@ -326,20 +462,20 @@
         </div>
         
         <div class="routine-section">
-            <div class="routine-title">
-                <h2>🔥🔥সকাল ১০ টা থেকে ১১:৩০ পর্যন্ত</h2>
+            <div class="routine-title" draggable="true">
+                <h2 contenteditable="true">🔥🔥সকাল ১০ টা থেকে ১১:৩০ পর্যন্ত</h2>
                 <button class="edit-btn" onclick="toggleEditMode('late-morning')">Edit</button>
             </div>
             <ul class="task-list" id="late-morning-tasks">
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">Physics Hunter Online Class</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">1. Make Own Note</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">নামাজ: যোহর</span>
                 </li>
@@ -352,32 +488,32 @@
         </div>
         
         <div class="routine-section">
-            <div class="routine-title">
-                <h2>🔥🔥দুপুর ৩:৩০ থেকে ৬:৩০ পর্যন্ত</h2>
+            <div class="routine-title" draggable="true">
+                <h2 contenteditable="true">🔥🔥দুপুর ৩:৩০ থেকে ৬:৩০ পর্যন্ত</h2>
                 <button class="edit-btn" onclick="toggleEditMode('afternoon')">Edit</button>
             </div>
             <ul class="task-list" id="afternoon-tasks">
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">নামাজ: আসর</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">Physics Hunter: (Material)</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">1. Class PDF</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">2. Own Note</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">3. QB Solve (অ্যাসপেক্ট)</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">নামাজ: মাগরিব</span>
                 </li>
@@ -390,24 +526,24 @@
         </div>
         
         <div class="routine-section">
-            <div class="routine-title">
-                <h2>🔥🔥রাত ৭টা থেকে ৯:৩০টা</h2>
+            <div class="routine-title" draggable="true">
+                <h2 contenteditable="true">🔥🔥রাত ৭টা থেকে ৯:৩০টা</h2>
                 <button class="edit-btn" onclick="toggleEditMode('evening')">Edit</button>
             </div>
             <ul class="task-list" id="evening-tasks">
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">Chemistry (Milton vai) Class</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">1. Make Note</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">2. Read Note and try মুখস্ত</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">নামাজ: এশা</span>
                 </li>
@@ -420,24 +556,24 @@
         </div>
         
         <div class="routine-section">
-            <div class="routine-title">
-                <h2>🔥🔥রাত ১০টা থেকে ১টা পর্যন্ত : No Screen</h2>
+            <div class="routine-title" draggable="true">
+                <h2 contenteditable="true">🔥🔥রাত ১০টা থেকে ১টা পর্যন্ত : No Screen</h2>
                 <button class="edit-btn" onclick="toggleEditMode('night')">Edit</button>
             </div>
             <ul class="task-list" id="night-tasks">
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">Chemistry (Self Study)</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">1. Read Book</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">2. Read Class Note (Milton), Own</span>
                 </li>
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">3. QB Solve (অ্যাসপেক্ট)</span>
                 </li>
@@ -450,12 +586,12 @@
         </div>
         
         <div class="routine-section">
-            <div class="routine-title">
-                <h2>Other Activities</h2>
+            <div class="routine-title" draggable="true">
+                <h2 contenteditable="true">Other Activities</h2>
                 <button class="edit-btn" onclick="toggleEditMode('other')">Edit</button>
             </div>
             <ul class="task-list" id="other-tasks">
-                <li class="task-item">
+                <li class="task-item" draggable="true">
                     <input type="checkbox" class="task-checkbox">
                     <span class="task-text">সকাল ১১:৩০ এর পর এবং রাত ৯:৩০ এর পর নিউজপেপার (Web/Telegram)</span>
                 </li>
@@ -467,7 +603,7 @@
             </div>
         </div>
         
-        <div class="exam-section">
+        <div class="exam-section" contenteditable="true">
             <h3>Exam Schedule</h3>
             <p><strong>Own Exam:</strong> বরিার, মঙ্গলবার, বৃহস্পতিবার। self study এর টাইমে, এই বিষয়ের উপর শনি, সোম, বুধ বারে পড়ার উপর তিরিশ মার্কের ২৫ মিনিটের এক্সাম।</p>
             <p>এভাবে শনি, সোম,বুধ বারে বরিার, মঙ্গলবার, বৃহস্পতিবারের পড়ার উপর exam</p>
@@ -478,18 +614,45 @@
         </footer>
     </div>
 
+    <!-- PDF Export Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <script>
-        // Update current time and date
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            updateDarkModeButton();
+        });
+
+        function updateDarkModeButton() {
+            if (document.body.classList.contains('dark-mode')) {
+                darkModeToggle.textContent = '☀️ Light Mode';
+            } else {
+                darkModeToggle.textContent = '🌙 Dark Mode';
+            }
+        }
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            updateDarkModeButton();
+        }
+
+        // Update current time and date with location detection
         function updateDateTime() {
             const now = new Date();
             
-            // Format time
-            const timeString = now.toLocaleTimeString('en-US', {
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
+            // Format time in 12-hour format with AM/PM
+            let hours = now.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // Convert 0 to 12
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
             
             // Format date
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -499,10 +662,42 @@
             document.getElementById('current-date').textContent = dateString;
         }
         
+        // Try to get location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Reverse geocoding to get city name would require an API
+                        // For simplicity, we'll just show coordinates
+                        document.getElementById('location-info').textContent = 
+                            `Location: ${position.coords.latitude.toFixed(2)}°, ${position.coords.longitude.toFixed(2)}°`;
+                        document.getElementById('gmt-control').style.display = 'none';
+                    },
+                    (error) => {
+                        console.error("Error getting location:", error);
+                        document.getElementById('location-info').textContent = "Location: Not available (using GMT+6)";
+                        document.getElementById('gmt-control').style.display = 'flex';
+                    }
+                );
+            } else {
+                document.getElementById('location-info').textContent = "Location: Not supported (using GMT+6)";
+                document.getElementById('gmt-control').style.display = 'flex';
+            }
+        }
+
         // Update every second
         setInterval(updateDateTime, 1000);
         updateDateTime(); // Initial call
-        
+        getLocation(); // Try to get location
+
+        // GMT offset selection
+        const gmtSelect = document.getElementById('gmt-select');
+        gmtSelect.addEventListener('change', () => {
+            // In a real implementation, you would adjust the displayed time
+            document.getElementById('location-info').textContent = 
+                `Location: Manual (GMT${gmtSelect.value > 0 ? '+' : ''}${gmtSelect.value})`;
+        });
+
         // Timer functionality
         let timerInterval;
         let timerSeconds = 0;
@@ -544,23 +739,26 @@
         document.getElementById('pause-timer').addEventListener('click', pauseTimer);
         document.getElementById('reset-timer').addEventListener('click', resetTimer);
         
-        // Checklist functionality
-        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const taskItem = this.parentElement;
-                if (this.checked) {
-                    taskItem.classList.add('completed');
-                    // Save to localStorage
-                    saveCheckboxState();
-                } else {
-                    taskItem.classList.remove('completed');
-                    // Save to localStorage
-                    saveCheckboxState();
-                }
-            });
+        // Progress Tracker
+        function updateProgress() {
+            const totalTasks = document.querySelectorAll('.task-checkbox').length;
+            const completedTasks = document.querySelectorAll('.task-checkbox:checked').length;
+            const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            document.getElementById('progress-text').textContent = 
+                `${percentage}% Completed (${completedTasks}/${totalTasks} Tasks)`;
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+        }
+        
+        // Update progress when checkboxes change
+        document.addEventListener('change', (e) => {
+            if (e.target.classList.contains('task-checkbox')) {
+                updateProgress();
+                saveCheckboxState();
+            }
         });
         
-        // Save checkbox state to localStorage
+        // Checklist functionality
         function saveCheckboxState() {
             const checkboxes = document.querySelectorAll('.task-checkbox');
             const checkboxStates = {};
@@ -572,7 +770,6 @@
             localStorage.setItem('checkboxStates', JSON.stringify(checkboxStates));
         }
         
-        // Load checkbox state from localStorage
         function loadCheckboxState() {
             const savedStates = localStorage.getItem('checkboxStates');
             if (savedStates) {
@@ -587,11 +784,70 @@
                         }
                     }
                 });
+                updateProgress();
             }
         }
         
-        // Load saved states when page loads
-        window.addEventListener('load', loadCheckboxState);
+        // Drag and Drop functionality
+        function setupDragAndDrop() {
+            const draggables = document.querySelectorAll('[draggable="true"]');
+            const containers = document.querySelectorAll('.task-list, .container');
+            
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', () => {
+                    draggable.classList.add('dragging');
+                });
+                
+                draggable.addEventListener('dragend', () => {
+                    draggable.classList.remove('dragging');
+                    saveTasksState();
+                });
+            });
+            
+            containers.forEach(container => {
+                container.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    const afterElement = getDragAfterElement(container, e.clientY);
+                    const draggable = document.querySelector('.dragging');
+                    
+                    if (afterElement == null) {
+                        container.appendChild(draggable);
+                    } else {
+                        container.insertBefore(draggable, afterElement);
+                    }
+                });
+            });
+        }
+        
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('[draggable="true"]:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+        
+        function saveTasksState() {
+            const sections = ['morning', 'late-morning', 'afternoon', 'evening', 'night', 'other'];
+            const tasksState = {};
+            
+            sections.forEach(section => {
+                const tasks = [];
+                document.querySelectorAll(`#${section}-tasks .task-text`).forEach(task => {
+                    tasks.push(task.textContent);
+                });
+                tasksState[section] = tasks;
+            });
+            
+            localStorage.setItem('tasksState', JSON.stringify(tasksState));
+        }
         
         // Edit mode functionality
         function toggleEditMode(section) {
@@ -622,6 +878,17 @@
                             li.classList.remove('completed');
                         }
                         saveCheckboxState();
+                        updateProgress();
+                    });
+                    
+                    // Make draggable
+                    li.setAttribute('draggable', 'true');
+                    li.addEventListener('dragstart', () => {
+                        li.classList.add('dragging');
+                    });
+                    li.addEventListener('dragend', () => {
+                        li.classList.remove('dragging');
+                        saveTasksState();
                     });
                 });
             } else {
@@ -645,6 +912,7 @@
             const taskList = document.getElementById(`${section}-tasks`);
             const newTask = document.createElement('li');
             newTask.className = 'task-item';
+            newTask.setAttribute('draggable', 'true');
             newTask.innerHTML = `
                 <input type="text" class="task-text" placeholder="Enter new task">
                 <button class="delete-task-btn" onclick="deleteTask(this)">Delete</button>
@@ -655,6 +923,8 @@
         function deleteTask(button) {
             const taskItem = button.parentElement;
             taskItem.remove();
+            updateProgress();
+            saveTasksState();
         }
         
         function saveTasks(section) {
@@ -673,6 +943,7 @@
                 if (input.value.trim() !== '') {
                     const newTask = document.createElement('li');
                     newTask.className = 'task-item';
+                    newTask.setAttribute('draggable', 'true');
                     newTask.innerHTML = `
                         <input type="checkbox" class="task-checkbox">
                         <span class="task-text">${input.value}</span>
@@ -687,54 +958,74 @@
                             newTask.classList.remove('completed');
                         }
                         saveCheckboxState();
+                        updateProgress();
                     });
-                }
-            });
-            
-            // Save tasks to localStorage
-            const tasks = [];
-            taskList.querySelectorAll('.task-text').forEach(task => {
-                tasks.push(task.textContent);
-            });
-            
-            localStorage.setItem(`${section}-tasks`, JSON.stringify(tasks));
-        }
-        
-        // Load saved tasks from localStorage
-        function loadTasks() {
-            const sections = ['morning', 'late-morning', 'afternoon', 'evening', 'night', 'other'];
-            
-            sections.forEach(section => {
-                const savedTasks = localStorage.getItem(`${section}-tasks`);
-                if (savedTasks) {
-                    const taskList = document.getElementById(`${section}-tasks`);
-                    taskList.innerHTML = '';
                     
-                    JSON.parse(savedTasks).forEach(taskText => {
-                        const newTask = document.createElement('li');
-                        newTask.className = 'task-item';
-                        newTask.innerHTML = `
-                            <input type="checkbox" class="task-checkbox">
-                            <span class="task-text">${taskText}</span>
-                        `;
-                        taskList.appendChild(newTask);
-                        
-                        // Add event listener to new checkbox
-                        newTask.querySelector('.task-checkbox').addEventListener('change', function() {
-                            if (this.checked) {
-                                newTask.classList.add('completed');
-                            } else {
-                                newTask.classList.remove('completed');
-                            }
-                            saveCheckboxState();
-                        });
+                    // Setup drag events
+                    newTask.addEventListener('dragstart', () => {
+                        newTask.classList.add('dragging');
+                    });
+                    newTask.addEventListener('dragend', () => {
+                        newTask.classList.remove('dragging');
+                        saveTasksState();
                     });
                 }
             });
+            
+            saveTasksState();
+            updateProgress();
         }
         
-        // Load saved tasks when page loads
-        window.addEventListener('load', loadTasks);
+        // PDF Export
+        document.getElementById('export-pdf').addEventListener('click', () => {
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 10,
+                filename: 'study-routine.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Temporarily hide edit buttons for PDF export
+            const editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach(btn => btn.style.visibility = 'hidden');
+            
+            html2pdf().from(element).set(opt).save().then(() => {
+                // Restore edit buttons after export
+                editButtons.forEach(btn => btn.style.visibility = 'visible');
+            });
+        });
+        
+        // Load saved data when page loads
+        window.addEventListener('load', () => {
+            loadCheckboxState();
+            setupDragAndDrop();
+            
+            // Load editable titles
+            const editableTitles = document.querySelectorAll('[contenteditable="true"]');
+            editableTitles.forEach(title => {
+                title.addEventListener('blur', () => {
+                    localStorage.setItem(`title-${title.parentElement.parentElement.id}`, title.textContent);
+                });
+                
+                const savedTitle = localStorage.getItem(`title-${title.parentElement.parentElement.id}`);
+                if (savedTitle) {
+                    title.textContent = savedTitle;
+                }
+            });
+            
+            // Load exam schedule
+            const examSection = document.querySelector('.exam-section');
+            const savedExam = localStorage.getItem('exam-content');
+            if (savedExam) {
+                examSection.innerHTML = savedExam;
+            }
+            
+            examSection.addEventListener('blur', () => {
+                localStorage.setItem('exam-content', examSection.innerHTML);
+            });
+        });
     </script>
 </body>
 </html>
